@@ -1,9 +1,12 @@
+#pragma once
+
 #include <string>
 #include <vector>
+#include <set>
 
-namespace Read {
+class Read {
+public:
+    static std::vector<std::string> readLines(const std::string &filename, char end);
 
-    std::vector<std::string> readLines(const std::string &filename, char delimiter);
-
-    std::vector<std::vector<std::string>> readTable(const std::string &filename, char delimiter, char end);
+    static std::vector<std::vector<std::string>> readTable(const std::string &filename, char end);
 };

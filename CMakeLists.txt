@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 3.22)
 set(CMAKE_CXX_STANDARD 20)
 project(new)
 
+include(cmake/BuildConfig.cmake)
+
 include(FetchContent)
 FetchContent_Declare(
         googletest
@@ -10,6 +12,7 @@ FetchContent_Declare(
 
 
 FetchContent_MakeAvailable(googletest)
+include(cmake/ClangTidyCheck.cmake)
 
 file(GLOB SRC_FILES *.cpp)
 add_executable(new ${SRC_FILES})
