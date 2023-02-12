@@ -1,12 +1,14 @@
 #include "assembly.h"
-#include "read.h"
+#include "read/read.h"
 #include <stdexcept>
+#include "log.h"
 
-AssemblyData::AssemblyData(const std::string &filename) {
+AssemblyData::AssemblyData(const std::string &filename, BasicLogPtr logger) {
+    logger->info("Start read data from file: {} ", filename);
     auto data = Read::readTable(filename, '\n');
     int numberLine = 1;
     while (data[numberLine][0] != ".code") {
-        auto &line = data[numberLine];
+        const auto &line = data[numberLine];
         if (line[1] == "?") {
             unknownValue_ = line[0];
         } else {
@@ -14,10 +16,13 @@ AssemblyData::AssemblyData(const std::string &filename) {
         }
         ++numberLine;
     }
+    ++numberLine;
     while (numberLine < data.size() - 1) {
-        auto &line = data[numberLine];
-        operations_.push_back(BinaryOperation(line[0], (line[1]), (line[2])));
+        const auto &line = data[numberLine];
+        operations_.push(BinaryOperation(line[0], (line[1]), (line[2])));
+        ++numberLine;
     }
+    logger->info("Reading is over");
 }
 
 BinaryOperation::BinaryOperation(const TypeOperation &operation, const std::string &leftOperand,
@@ -55,4 +60,41 @@ TypeOperation BinaryOperation::whatOperation(const std::string &nameOperation) {
         return TypeOperation::idiv;
     }
     throw std::invalid_argument(nameOperation + " unknown operation");
+}
+
+TypeOperation BinaryOperation::nameOperation() const {
+    return nameOperation_;
+}
+
+BinaryOperation AssemblyData::getNext(BasicLogPtr logger) {
+    try {
+        BinaryOperation result(operations_.front());
+        logger->info("Get operation: {} {} {}", static_cast<int>(result.nameOperation()), result.leftOperand(),
+                     result.rightOperand());
+        operations_.pop();
+        return result;
+    } catch (...) {
+        logger->critical("Cannot get next operation in function {}", "getNext");
+        exit(1);
+    }
+}
+
+int &AssemblyData::getValue(const std::string &name) {
+    return values_[name];
+}
+
+bool AssemblyData::isEmpty() const {
+    return operations_.isEmpty();
+}
+
+int AssemblyData::getAns() {
+    return values_[unknownValue_];
+}
+
+const std::string &BinaryOperation::leftOperand() const {
+    return leftOperand_;
+}
+
+const std::string &BinaryOperation::rightOperand() const {
+    return rightOperand_;
 }

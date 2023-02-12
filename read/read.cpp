@@ -6,6 +6,9 @@
 std::vector<std::vector<std::string>>
 Read::readTable(const std::string &filename, char end) {
     std::ifstream in(filename);
+    if (!in.is_open()) {
+        throw std::invalid_argument("Wrong path: " + filename);
+    }
     std::vector<std::vector<std::string>> result;
     while (!in.eof()) {
         std::vector<std::string> vecStrings;
@@ -25,6 +28,9 @@ Read::readTable(const std::string &filename, char end) {
 
 std::vector<std::string> Read::readLines(const std::string &filename, char end) {
     std::ifstream in(filename);
+    if (!in.is_open()) {
+        throw std::invalid_argument("Wrong path: " + filename);
+    }
     std::vector<std::string> result;
     while (!in.eof()) {
         std::string now;

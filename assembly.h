@@ -4,6 +4,8 @@
 #include <string>
 #include <vector>
 #include <bitset>
+#include "queue/queue.h"
+#include "log.h"
 
 class AssemblyData;
 
@@ -13,12 +15,20 @@ enum class TypeOperation;
 
 class AssemblyData {
 public:
-    AssemblyData(const std::string &filename);
+    AssemblyData(const std::string &filename, BasicLogPtr logger = standartLog);
+
+    BinaryOperation getNext(BasicLogPtr logger = standartLog);
+
+    int &getValue(const std::string &name);
+
+    bool isEmpty() const;
+
+    int getAns();
 
 private:
 
     std::map<std::string, int> values_;
-    std::vector<BinaryOperation> operations_;
+    Queue<BinaryOperation> operations_;
     std::string unknownValue_;
 
 };
@@ -28,6 +38,12 @@ public:
     BinaryOperation(const TypeOperation &operation, const std::string &leftOperand, const std::string &rightOperand);
 
     BinaryOperation(const std::string &operation, const std::string &leftOperand, const std::string &rightOperand);
+
+    TypeOperation nameOperation() const;
+
+    const std::string &leftOperand() const;
+
+    const std::string &rightOperand() const;
 
     static TypeOperation whatOperation(const std::string &nameOperation);
 
