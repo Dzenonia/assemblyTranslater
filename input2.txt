@@ -1,0 +1,13 @@
+.data
+x00  -1  // для инверсии знака
+x01  3   // a
+x02  2  // b
+x03  1  // c
+x04  10  // x
+x05  ?  // результат
+.code
+mov Ak x04
+mov x05 Ak
+add x05 x00
+mul x05 x03
+end
