@@ -77,7 +77,7 @@ void Command<BITS>::umul(int &lhs, int rhs, BasicLogPtr logger) {
     logger->info("Start do operation {}", "imul");
     if (lhs < 0 || rhs < 0) {
         logger->error(std::to_string(lhs) + " or " + std::to_string(rhs) + " is negative number");
-        exit(1);
+        throw std::invalid_argument(std::to_string(lhs) + " or " + std::to_string(rhs) + " is negative number");
     }
     std::bitset<BITS> lhsBits(lhs);
     std::bitset<BITS> rhsBits(rhs);
@@ -101,7 +101,9 @@ void Command<BITS>::umul(int &lhs, int rhs, BasicLogPtr logger) {
         logger->error(
                 "Multiply " + std::to_string(lhs) + " " + std::to_string(rhs) + " is more than" + std::to_string(BITS) +
                 "-bit");
-        exit(1);
+        throw std::out_of_range(
+                "Multiply " + std::to_string(lhs) + " " + std::to_string(rhs) + " is more than" + std::to_string(BITS) +
+                "-bit");
     }
     lhs = answer.to_ullong();
     logger->info("Operation {} is done", "imul");
@@ -124,7 +126,7 @@ void Command<BITS>::command(TypeOperation name, int &lhs, int rhs, BasicLogPtr l
             break;
         default:
             logger->error("{} dont find", static_cast<int>(name));
-            exit(1);
+            throw std::invalid_argument("Unknown command");
     }
 }
 

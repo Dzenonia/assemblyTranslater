@@ -1,5 +1,6 @@
 #include "command.h"
 #include "gtest/gtest.h"
+
 TEST(Command, mov) {
     int lhs = 3;
     int rhs = 10;
